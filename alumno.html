@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Usuario - TeCNM Veracruz</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="admin-page zoom-enabled">
+    <!-- Header con diseño premium -->
+    <header class="header">
+        <div class="container header-container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="img/logo-tecnm-nacional.png" alt="Logo Tecnológico Nacional de México"
+                        class="logo-nacional">
+                    <img src="img/logo-tecnm.png" alt="Logo TeCNM Veracruz" class="logo-campus">
+                    <div class="header-divider"></div>
+                    <div class="system-title">
+                        <span class="main-title">Centro de Cómputo</span>
+                        <span class="sub-title">Panel de Usuario</span>
+                    </div>
+                </div>
+                <div class="user-info-premium">
+                    <div class="user-details">
+                        <span id="user-name" class="user-full-name">Usuario</span>
+                        <span class="user-role"><i class="fas fa-user-graduate"></i> Alumno</span>
+                    </div>
+                    <button id="logout-btn" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Cerrar Sesión</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="welcome-msg">
+            <h1>Panel de Usuario</h1>
+            <p>Gestiona tus equipos y solicitudes desde aquí</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Opción: Entrega de equipo -->
+            <div class="option-card" data-section="request-delivery">
+                <i class="fas fa-box-open"></i>
+                <h3>Entrega de equipo</h3>
+            </div>
+
+            <!-- Opción: Inventario Interno -->
+            <div class="option-card" data-section="inventory">
+                <i class="fas fa-warehouse"></i>
+                <h3>Inventario Interno</h3>
+            </div>
+
+            <!-- Opción: Equipo Foráneo -->
+            <div class="option-card" data-section="external-inventory">
+                <i class="fas fa-laptop-house"></i>
+                <h3>Equipo Foráneo</h3>
+            </div>
+
+            <!-- Opción: Historial de Entregas -->
+            <div class="option-card" data-section="delivery-history">
+                <i class="fas fa-history"></i>
+                <h3>Historial de Entregas</h3>
+            </div>
+
+            <!-- Opción: Historial de Rentas -->
+            <div class="option-card" data-section="my-rentals">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>Historial de Rentas</h3>
+            </div>
+
+            <!-- Opción: Reportes -->
+            <div class="option-card" data-section="user-reports">
+                <i class="fas fa-chart-bar"></i>
+                <h3>Reportes</h3>
+            </div>
+        </div>
+
+        <!-- VENTANA FLOTANTE PRINCIPAL -->
+        <div id="window-overlay" class="window-overlay">
+            <div class="floating-window">
+                <div class="window-header">
+                    <div class="window-title" id="window-title-text">
+                        <i class="fas fa-cog"></i> <span>Configuración</span>
+                    </div>
+                    <div class="window-controls">
+                        <button class="control-btn close-btn" title="Cerrar"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="window-body">
+                    <!-- Contenido original movido aquí -->
+                    <section class="admin-content">
+                        <!-- Entrega de equipo Section -->
+                        <div id="request-delivery" class="content-section">
+                            <h2>Entrega de equipo</h2>
+                            <!-- FORMULARIO -->
+                            <div class="create-user-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="delivery-item">Equipo *</label>
+                                        <select id="delivery-item" required>
+                                            <option value="">Cargando equipos...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="delivery-quantity">Cantidad *</label>
+                                        <input type="number" id="delivery-quantity" min="1" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="delivery-department">Departamento *</label>
+                                        <input type="text" id="delivery-department" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="delivery-observations">Observaciones</label>
+                                    <textarea id="delivery-observations" rows="3"
+                                        placeholder="Ej: Monitor con problema en pantalla"></textarea>
+                                </div>
+                                <button type="button" id="submit-delivery" class="btn btn-success">
+                                    <i class="fas fa-paper-plane"></i> Enviar Solicitud para Autorización
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Delivery History Section -->
+                        <div id="delivery-history" class="content-section">
+                            <h2>Historial de Mis Entregas</h2>
+                            <div class="users-filter">
+                                <button class="btn-filter active" data-filter="all">Todas</button>
+                                <button class="btn-filter" data-filter="pending">Pendientes</button>
+                                <button class="btn-filter" data-filter="approved">Aprobadas</button>
+                                <button class="btn-filter" data-filter="rejected">Rechazadas</button>
+                            </div>
+                            <div id="history-container">
+                                <p>Cargando historial de entregas...</p>
+                            </div>
+                        </div>
+
+                        <!-- Inventory Section -->
+                        <div id="inventory" class="content-section">
+                            <h2>Inventario Interno</h2>
+                            <div class="create-user-form">
+                                <h3>Registrar Nuevo Equipo</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="inventory-name">Equipo *</label>
+                                        <select id="inventory-name" required>
+                                            <option value="">Selecciona un equipo</option>
+                                            <option value="Muse">Muse</option>
+                                            <option value="Memoria RAM">Memoria RAM</option>
+                                            <option value="Aire comprimido">Aire comprimido</option>
+                                            <option value="Disco duro">Disco duro</option>
+                                            <option value="Ssd">Ssd</option>
+                                            <option value="Tóner">Tóner</option>
+                                            <option value="CPU">CPU</option>
+                                            <option value="Monitores">Monitores</option>
+                                            <option value="Antenas (USB, wifi o red)">Antenas (USB, wifi o red)</option>
+                                            <option value="Espuma limpiadores">Espuma limpiadores</option>
+                                            <option value="Alcohol isopropílico">Alcohol isopropílico</option>
+                                            <option value="Adaptador de disco duro y ssd">Adaptador de disco duro y ssd
+                                            </option>
+                                            <option value="Teclados">Teclados</option>
+                                            <option value="Toallas">Toallas</option>
+                                            <option value="Fuentes de poder">Fuentes de poder</option>
+                                            <option value="Cables utp, k6">Cables utp, k6</option>
+                                            <option value="Cables de video (HDMI)">Cables de video (HDMI)</option>
+                                            <option value="Baterías ups">Baterías ups</option>
+                                            <option value="Limpiador de circuitos">Limpiador de circuitos</option>
+                                            <option value="Cables de impresora">Cables de impresora</option>
+                                            <option value="Cables de corrientes">Cables de corrientes</option>
+                                            <option value="Disipadores">Disipadores</option>
+                                            <option value="Bocinas">Bocinas</option>
+                                            <option value="Abrazadores">Abrazadores</option>
+                                            <option value="Desarmadores para laptop">Desarmadores para laptop</option>
+                                            <option value="Desarmadores plano y cruz">Desarmadores plano y cruz</option>
+                                            <option value="Pinzas de corte y de punta">Pinzas de corte y de punta
+                                            </option>
+                                            <option value="Brochas antiestáticas">Brochas antiestáticas</option>
+                                            <option value="Ponchadores">Ponchadores</option>
+                                            <option value="Cinchos">Cinchos</option>
+                                            <option value="Cargadores de laptop">Cargadores de laptop</option>
+                                            <option value="Limpiador para pantallas">Limpiador para pantallas</option>
+                                            <option value="Extensores USB">Extensores USB</option>
+                                            <option value="lector de DVD externo">lector de DVD externo</option>
+                                            <option value="Poe">Poe</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inventory-brand">Marca *</label>
+                                        <input type="text" id="inventory-brand" placeholder="Ej: HP" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="inventory-model">Modelo *</label>
+                                        <input type="text" id="inventory-model" placeholder="Ej: Pro Mini 400 G9"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inventory-unit">Unidad de Medida *</label>
+                                        <select id="inventory-unit" required>
+                                            <option value="">Selecciona una unidad</option>
+                                            <option value="pzs">Piezas</option>
+                                            <option value="botes">Botes</option>
+                                            <option value="kit">Kit</option>
+                                            <option value="caja">Caja</option>
+                                            <option value="unidad">Unidad</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="inventory-serial">Número de Serie *</label>
+                                        <input type="text" id="inventory-serial" placeholder="Ej: BCC24521PX" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inventory-quantity">Cantidad *</label>
+                                        <input type="number" id="inventory-quantity" min="1" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inventory-description">Descripción *</label>
+                                    <textarea id="inventory-description" rows="3" placeholder="Descripción..."
+                                        required></textarea>
+                                </div>
+                                <button type="button" id="add-inventory-item" class="btn btn-success"><i
+                                        class="fas fa-plus-circle"></i> Registrar Equipo</button>
+                            </div>
+                            <div class="inventory-table">
+                                <h3>Equipos Registrados</h3>
+                                <table class="users-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Marca</th>
+                                            <th>Modelo</th>
+                                            <th>Serial</th>
+                                            <th>Cantidad</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="inventory-table-body">
+                                        <tr>
+                                            <td colspan="6">Cargando inventario...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- External Inventory Section -->
+                        <div id="external-inventory" class="content-section">
+                            <h2>Equipo Foráneo</h2>
+                            <div class="create-user-form">
+                                <h3>Registrar Nuevo Equipo Foráneo</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="external-clave">Clave *</label>
+                                        <input type="text" id="external-clave" placeholder="Ej: EXT001" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="external-folio">Folio/Factura *</label>
+                                        <input type="text" id="external-folio" placeholder="Ej: F-12345" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="external-marca">Marca *</label>
+                                        <input type="text" id="external-marca" placeholder="Ej: HP" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="external-modelo">Modelo *</label>
+                                        <input type="text" id="external-modelo" placeholder="Ej: EliteBook" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="external-serie">Número de Serie *</label>
+                                        <input type="text" id="external-serie" placeholder="Ej: SN123" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="external-proveedor">Proveedor *</label>
+                                        <input type="text" id="external-proveedor" placeholder="Ej: HP Store" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="external-edificio">Edificio *</label>
+                                        <input type="text" id="external-edificio" placeholder="Ej: Edif K" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="external-depto">Departamento *</label>
+                                        <input type="text" id="external-depto" placeholder="Ej: Sistemas" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="external-responsable">Responsable que recibe *</label>
+                                        <input type="text" id="external-responsable" placeholder="Nombre completo"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="external-descripcion">Descripción *</label>
+                                    <textarea id="external-descripcion" rows="2" placeholder="Detalles..."
+                                        required></textarea>
+                                </div>
+                                <button type="button" id="add-external-item" class="btn btn-success"><i
+                                        class="fas fa-plus-circle"></i> Registrar Equipo Foráneo</button>
+                            </div>
+                            <div class="inventory-table">
+                                <h3>Equipos Foráneos Registrados</h3>
+                                <table class="users-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Clave</th>
+                                            <th>Folio</th>
+                                            <th>Marca/Modelo</th>
+                                            <th>Serie</th>
+                                            <th>Ubicación/Responsable</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="external-inventory-table-body">
+                                        <tr>
+                                            <td colspan="7">Cargando equipos...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- User Reports Section -->
+                        <div id="user-reports" class="content-section">
+                            <h2>Reportes</h2>
+                            <div class="create-user-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="report-start-date">Fecha Inicio</label>
+                                        <input type="date" id="report-start-date">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="report-end-date">Fecha Fin</label>
+                                        <input type="date" id="report-end-date">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <button id="print-report-dept" class="btn btn-info btn-block"
+                                        style="margin-bottom: 10px;"><i class="fas fa-file-pdf"></i> Reporte por
+                                        Departamento</button>
+                                    <button id="print-report-person" class="btn btn-info btn-block"><i
+                                            class="fas fa-file-pdf"></i> Reporte por
+                                        Persona</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- My Rentals Section -->
+                        <div id="my-rentals" class="content-section">
+                            <h2>Historial de Mis Rentas</h2>
+                            <div class="users-filter">
+                                <button class="btn-filter active" data-filter="all">Todas</button>
+                                <button class="btn-filter" data-filter="pending">Pendientes</button>
+                                <button class="btn-filter" data-filter="approved">Aprobadas</button>
+                                <button class="btn-filter" data-filter="returned">Devueltas</button>
+                            </div>
+                            <div id="my-rentals-container">
+                                <p>Cargando historial de rentas...</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer - MISMO QUE ADMIN -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-address">
+                    Dirección:<br>
+                    Tecnológico Nacional de México campus Veracruz | www.veracruz.tecnm.mx<br>
+                    © 2019 / Tecnológico Nacional de México Veracruz<br>
+                    Calz. Miguel Angel de Quevedo 2779<br>
+                    Col. Formando Hogar, Veracruz, Ver. MEXICO CP 91897<br><br>
+                    Contacto:<br>
+                    (229) 934 15 00<br>
+                    web_veracruz@tecnm.mx
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Modal - CON BOTÓN CANCELAR SIEMPRE VISIBLE -->
+    <div id="custom-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-icon" id="modal-icon">✅</div>
+            <h2 id="modal-title">Éxito</h2>
+            <p id="modal-message">La acción se realizó correctamente.</p>
+            <div class="modal-buttons">
+                <button id="modal-confirm-btn" class="btn btn-success"><i class="fas fa-check"></i> Aceptar</button>
+                <button id="modal-cancel-btn" class="btn btn-danger" style="display:none;"><i class="fas fa-times"></i>
+                    Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/alumno.js"></script>
+</body>
+
+</html>

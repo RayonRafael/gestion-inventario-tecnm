@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - TeCNM Veracruz</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="login-page zoom-enabled">
+    <!-- Header con ambos logos -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="img/logo-tecnm-nacional.png" alt="Logo Tecnológico Nacional de México"
+                        class="logo-nacional">
+                    <img src="img/logo-tecnm.png" alt="Logo TeCNM Veracruz" class="logo-campus">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Form Section -->
+    <section class="login-section">
+        <div class="container">
+            <div class="login-container">
+                <div class="login-header">
+                    <h1>Iniciar Sesión</h1>
+                    <p>Selecciona tu tipo de usuario para acceder</p>
+                </div>
+
+                <!-- Tabs de Usuario -->
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('alumno')">Usuarios</button>
+                    <button class="tab-btn" onclick="switchTab('administrativo')">Administrador</button>
+                </div>
+
+                <!-- Formulario Alumno -->
+                <div id="alumno-form" class="tab-content active">
+                    <form id="alumno-login-form" class="login-form">
+                        <div class="form-group">
+                            <label for="alumno-control">Número de Control *</label>
+                            <input type="text" id="alumno-control" name="numeroControl" placeholder="Ej: 21301234"
+                                maxlength="8" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alumno-password">Contraseña *</label>
+                            <input type="password" id="alumno-password" name="password"
+                                placeholder="Ingresa tu contraseña" required>
+                        </div>
+
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="alumno-remember">
+                                <span>Recordarme</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+                    </form>
+                </div>
+
+                <!-- Formulario Administrativo -->
+                <div id="administrativo-form" class="tab-content">
+                    <form id="admin-login-form" class="login-form">
+                        <div class="form-group">
+                            <label for="admin-rfc">RFC *</label>
+                            <input type="text" id="admin-rfc" name="rfc" placeholder="Ej: XAXX010101000" maxlength="13"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="admin-password">Contraseña *</label>
+                            <input type="password" id="admin-password" name="password"
+                                placeholder="Ingresa tu contraseña" required>
+                        </div>
+
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="admin-remember">
+                                <span>Recordarme</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+                    </form>
+                </div>
+
+                <div class="login-footer">
+                    <p><a href="index.html" class="back-link">← Regresar al inicio</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulario de Entrega (Solo para Usuarios) -->
+    <section id="delivery-section" class="delivery-section" style="display:none;">
+        <div class="container">
+            <div class="delivery-container">
+                <h2>Registrar Solicitud de Entrega de Equipo</h2>
+
+                <div class="delivery-form-container">
+                    <form id="delivery-form" class="create-user-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="delivery-item">Equipo *</label>
+                                <select id="delivery-item" required>
+                                    <option value="">Cargando equipos...</option>
+                                </select>
+                                <small class="error-message" id="error-delivery-item"></small>
+                            </div>
+                            <div class="form-group">
+                                <label for="delivery-quantity">Cantidad *</label>
+                                <input type="number" id="delivery-quantity" min="1" required>
+                                <small class="error-message" id="error-delivery-quantity"></small>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="delivery-department">Departamento *</label>
+                                <input type="text" id="delivery-department" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="delivery-observations">Observaciones</label>
+                            <textarea id="delivery-observations" rows="3"
+                                placeholder="Ej: Monitor con problema en pantalla"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Enviar Solicitud para Autorización
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Mis Solicitudes -->
+                <div class="my-deliveries">
+                    <h3>Mis Solicitudes de Entrega</h3>
+                    <div id="my-deliveries-list">
+                        <p>Cargando tus solicitudes...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-address">
+                    Dirección:<br>
+                    Tecnológico Nacional de México campus Veracruz | www.veracruz.tecnm.mx<br>
+                    © 2019 / Tecnológico Nacional de México Veracruz<br>
+                    Calz. Miguel Angel de Quevedo 2779<br>
+                    Col. Formando Hogar, Veracruz, Ver. MEXICO CP 91897<br><br>
+                    Contacto:<br>
+                    (229) 934 15 00<br>
+                    web_veracruz@tecnm.mx
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Modal para notificaciones -->
+    <div id="custom-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-icon" id="modal-icon">✅</div>
+            <h2 id="modal-title">Éxito</h2>
+            <p id="modal-message">La acción se realizó correctamente.</p>
+            <div class="modal-buttons">
+                <button id="modal-confirm-btn" class="btn btn-primary">Aceptar</button>
+                <button id="modal-cancel-btn" class="btn btn-secondary" style="display:none;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <!-- Scripts del proyecto -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

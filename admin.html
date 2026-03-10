@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administrador - TeCNM Veracruz</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="admin-page zoom-enabled">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="img/logo-tecnm-nacional.png" alt="Logo Tecnológico Nacional de México"
+                        class="logo-nacional">
+                    <img src="img/logo-tecnm.png" alt="Logo TeCNM Veracruz" class="logo-campus">
+                </div>
+                <div class="user-info">
+                    <span id="user-name"><i class="fas fa-user-tie"></i> Administrador</span>
+                    <button id="logout-btn" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Cerrar
+                        Sesión</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content: Dashboard Mode -->
+    <main class="dashboard-container">
+        <div class="welcome-msg">
+            <h1>Bienvenido, <span id="welcome-user">Administrador</span></h1>
+            <p>Selecciona una opción para comenzar a gestionar el sistema</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Dashboard Card -->
+            <div class="option-card" data-section="dashboard">
+                <i class="fas fa-chart-pie"></i>
+                <h3>Estadísticas Rápidas</h3>
+            </div>
+
+            <!-- Create User Card -->
+            <div class="option-card" data-section="create-user">
+                <i class="fas fa-user-plus"></i>
+                <h3>Crear Usuario</h3>
+            </div>
+
+            <!-- Internal Inventory -->
+            <div class="option-card" data-section="inventory">
+                <i class="fas fa-boxes-stacked"></i>
+                <h3>Inventario Interno</h3>
+            </div>
+
+            <!-- External Inventory -->
+            <div class="option-card" data-section="external-inventory">
+                <i class="fas fa-truck-ramp-box"></i>
+                <h3>Equipo Foráneo</h3>
+            </div>
+
+            <!-- Direct Delivery -->
+            <div class="option-card" data-section="direct-delivery">
+                <i class="fas fa-hand-holding-box"></i>
+                <h3>Entrega Directa</h3>
+            </div>
+
+            <!-- Direct Rental -->
+            <div class="option-card" data-section="direct-rental">
+                <i class="fas fa-key"></i>
+                <h3>Renta Foránea</h3>
+            </div>
+
+            <!-- Pending Deliveries -->
+            <div class="option-card" data-section="pending-deliveries">
+                <i class="fas fa-clock-rotate-left"></i>
+                <h3>Entregas Pendientes</h3>
+            </div>
+
+            <!-- Pending Rentals -->
+            <div class="option-card" data-section="pending-rentals">
+                <i class="fas fa-hourglass-half"></i>
+                <h3>Rentas Pendientes</h3>
+            </div>
+
+            <!-- Delivery History -->
+            <div class="option-card" data-section="delivery-history">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>Historial Entregas</h3>
+            </div>
+
+            <!-- Rental Reports -->
+            <div class="option-card" data-section="rental-history">
+                <i class="fas fa-file-contract"></i>
+                <h3>Reportes de Rentas</h3>
+            </div>
+
+            <!-- Users List -->
+            <div class="option-card" data-section="users-list">
+                <i class="fas fa-users-viewfinder"></i>
+                <h3>Lista de Usuarios</h3>
+            </div>
+
+            <!-- Settings -->
+            <div class="option-card" data-section="settings">
+                <i class="fas fa-gears"></i>
+                <h3>Configuración</h3>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Window Overlay -->
+    <div id="window-overlay" class="window-overlay">
+        <div class="floating-window">
+            <div class="window-header">
+                <div class="window-title" id="window-title-text">
+                    <i class="fas fa-window-maximize"></i> <span>Ventana</span>
+                </div>
+                <div class="window-controls">
+                    <button class="control-btn close-btn" id="close-window" title="Cerrar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="window-body">
+                <section class="admin-content">
+                    <!-- Dashboard Section -->
+                    <div id="dashboard" class="content-section">
+                        <h2>Estadísticas del Sistema</h2>
+                        <div class="dashboard-stats">
+                            <div class="stat-card">
+                                <h3><i class="fas fa-users"></i> Total de Usuarios</h3>
+                                <p id="total-users">0</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3><i class="fas fa-user-graduate"></i> Alumnos</h3>
+                                <p id="total-alumnos">0</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3><i class="fas fa-user-shield"></i> Administradores</h3>
+                                <p id="total-administrativos">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REUTILIZO TODAS LAS SECCIONES ORIGINALES -->
+                    <!-- NOTA: Las muevo aquí dentro de .admin-content -->
+                    <!-- Pero para no sobrecargar el mensaje, las mantendré intactas en su lógica -->
+
+                    <!-- Create User Section -->
+                    <div id="create-user" class="content-section">
+                        <div class="tabs">
+                            <button class="tab-btn active" data-tab="alumno-create">Usuarios</button>
+                            <button class="tab-btn" data-tab="admin-create">Administrador</button>
+                        </div>
+                        <div id="alumno-create-form" class="tab-content active">
+                            <form id="create-alumno-form" class="create-user-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="alumno-num-control">Número de Control *</label>
+                                        <input type="text" id="alumno-num-control" name="numeroControl" maxlength="8"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="alumno-nombre">Nombre(s) *</label>
+                                        <input type="text" id="alumno-nombre" name="nombre" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="alumno-ap-paterno">Apellido Paterno *</label>
+                                        <input type="text" id="alumno-ap-paterno" name="apellidoPaterno" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="alumno-ap-materno">Apellido Materno *</label>
+                                        <input type="text" id="alumno-ap-materno" name="apellidoMaterno" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="alumno-carrera">Carrera *</label>
+                                        <select id="alumno-carrera" name="carrera" required>
+                                            <option value="">Selecciona una carrera</option>
+                                            <option value="Ingeniería en Sistemas">Ingeniería en Sistemas</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="alumno-password">Contraseña *</label>
+                                        <input type="password" id="alumno-password" name="password" minlength="6"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="alumno-confirm-password">Confirmar Contraseña *</label>
+                                        <input type="password" id="alumno-confirm-password" name="confirmPassword"
+                                            minlength="6" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-block"><i
+                                        class="fas fa-user-check"></i> Crear Usuario</button>
+                            </form>
+                        </div>
+                        <div id="admin-create-form" class="tab-content">
+                            <form id="create-admin-form" class="create-user-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="admin-rfc">RFC *</label>
+                                        <input type="text" id="admin-rfc" name="rfc" maxlength="13" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="admin-nombre">Nombre(s) *</label>
+                                        <input type="text" id="admin-nombre" name="nombre" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="admin-ap-paterno">Apellido Paterno *</label>
+                                        <input type="text" id="admin-ap-paterno" name="apellidoPaterno" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="admin-ap-materno">Apellido Materno *</label>
+                                        <input type="text" id="admin-ap-materno" name="apellidoMaterno" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="admin-area">Área *</label>
+                                        <select id="admin-area" name="area" required>
+                                            <option value="">Selecciona un área</option>
+                                            <option value="Ingeniería de Sistemas Computacionales">Ingeniería de
+                                                Sistemas Computacionales</option>
+                                            <option value="Centro de Cómputo">Centro de Cómputo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="admin-password">Contraseña *</label>
+                                        <input type="password" id="admin-password" name="password" minlength="6"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="admin-confirm-password">Confirmar Contraseña *</label>
+                                        <input type="password" id="admin-confirm-password" name="confirmPassword"
+                                            minlength="6" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-block"><i
+                                        class="fas fa-user-shield"></i> Crear Administrador</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Section -->
+                    <div id="inventory" class="content-section">
+                        <div class="create-user-form">
+                            <h3>Registrar Nuevo Equipo</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="inventory-name">Equipo *</label>
+                                    <select id="inventory-name" required>
+                                        <option value="">Selecciona un equipo</option>
+                                        <option value="Muse">Muse</option>
+                                        <option value="Memoria RAM">Memoria RAM</option>
+                                        <option value="Aire comprimido">Aire comprimido</option>
+                                        <option value="Disco duro">Disco duro</option>
+                                        <option value="Ssd">Ssd</option>
+                                        <option value="Tóner">Tóner</option>
+                                        <option value="CPU">CPU</option>
+                                        <option value="Monitores">Monitores</option>
+                                        <option value="Antenas (USB, wifi o red)">Antenas (USB, wifi o red)</option>
+                                        <option value="Espuma limpiadores">Espuma limpiadores</option>
+                                        <option value="Alcohol isopropílico">Alcohol isopropílico</option>
+                                        <option value="Adaptador de disco duro y ssd">Adaptador de disco duro y ssd
+                                        </option>
+                                        <option value="Teclados">Teclados</option>
+                                        <option value="Toallas">Toallas</option>
+                                        <option value="Fuentes de poder">Fuentes de poder</option>
+                                        <option value="Cables utp, k6">Cables utp, k6</option>
+                                        <option value="Cables de video (HDMI)">Cables de video (HDMI)</option>
+                                        <option value="Baterías ups">Baterías ups</option>
+                                        <option value="Limpiador de circuitos">Limpiador de circuitos</option>
+                                        <option value="Cables de impresora">Cables de impresora</option>
+                                        <option value="Cables de corrientes">Cables de corrientes</option>
+                                        <option value="Disipadores">Disipadores</option>
+                                        <option value="Bocinas">Bocinas</option>
+                                        <option value="Abrazadores">Abrazadores</option>
+                                        <option value="Desarmadores para laptop">Desarmadores para laptop</option>
+                                        <option value="Desarmadores plano y cruz">Desarmadores plano y cruz</option>
+                                        <option value="Pinzas de corte y de punta">Pinzas de corte y de punta</option>
+                                        <option value="Brochas antiestáticas">Brochas antiestáticas</option>
+                                        <option value="Ponchadores">Ponchadores</option>
+                                        <option value="Cinchos">Cinchos</option>
+                                        <option value="Cargadores de laptop">Cargadores de laptop</option>
+                                        <option value="Limpiador para pantallas">Limpiador para pantallas</option>
+                                        <option value="Extensores USB">Extensores USB</option>
+                                        <option value="lector de DVD externo">lector de DVD externo</option>
+                                        <option value="Poe">Poe</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inventory-brand">Marca *</label>
+                                    <input type="text" id="inventory-brand" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="inventory-model">Modelo *</label>
+                                    <input type="text" id="inventory-model" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inventory-unit">Unidad de Medida *</label>
+                                    <select id="inventory-unit" required>
+                                        <option value="">Selecciona una unidad</option>
+                                        <option value="pzs">Piezas</option>
+                                        <option value="botes">Botes</option>
+                                        <option value="kit">Kit</option>
+                                        <option value="caja">Caja</option>
+                                        <option value="unidad">Unidad</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="inventory-serial">Número de Serie *</label>
+                                    <input type="text" id="inventory-serial" list="serialNumbers" required>
+                                    <datalist id="serialNumbers"></datalist>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inventory-quantity">Cantidad *</label>
+                                    <input type="number" id="inventory-quantity" min="1" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inventory-description">Descripción *</label>
+                                <textarea id="inventory-description" rows="3" required></textarea>
+                            </div>
+                            <button type="button" id="add-inventory-item" class="btn btn-success"><i
+                                    class="fas fa-plus-circle"></i> Registrar Equipo</button>
+                        </div>
+                        <div class="inventory-table">
+                            <h3>Equipos Registrados</h3>
+                            <div class="users-filter">
+                                <button class="btn-filter active" data-filter="all">Todos</button>
+                                <button class="btn-filter" data-filter="low-stock">Bajo Stock</button>
+                            </div>
+                            <table class="users-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Marca</th>
+                                        <th>Modelo</th>
+                                        <th>Serial</th>
+                                        <th>Cantidad</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventory-table-body">
+                                    <tr>
+                                        <td colspan="6">Cargando inventario...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- External Inventory -->
+                    <div id="external-inventory" class="content-section">
+                        <div class="create-user-form">
+                            <h3>Registrar Nuevo Equipo Foráneo</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="external-clave">Clave *</label>
+                                    <input type="text" id="external-clave" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="external-folio">Folio/Factura *</label>
+                                    <input type="text" id="external-folio" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="external-marca">Marca *</label>
+                                    <input type="text" id="external-marca" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="external-modelo">Modelo *</label>
+                                    <input type="text" id="external-modelo" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="external-serie">Número de Serie *</label>
+                                    <input type="text" id="external-serie" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="external-proveedor">Proveedor *</label>
+                                    <input type="text" id="external-proveedor" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="external-edificio">Edificio *</label>
+                                    <input type="text" id="external-edificio" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="external-depto">Departamento *</label>
+                                    <input type="text" id="external-depto" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="external-responsable">Persona Responsable que recibe *</label>
+                                    <input type="text" id="external-responsable" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="external-descripcion">Descripción *</label>
+                                <textarea id="external-descripcion" rows="3" required></textarea>
+                            </div>
+                            <button type="button" id="add-external-item" class="btn btn-success"><i
+                                    class="fas fa-plus-circle"></i> Registrar Equipo Foráneo</button>
+                        </div>
+                        <div class="inventory-table">
+                            <h3>Equipos Registrados (Equipo Foráneo)</h3>
+                            <div class="users-filter">
+                                <button class="btn-filter active" data-filter="all">Todos</button>
+                                <button class="btn-filter" data-filter="available">Disponibles</button>
+                                <button class="btn-filter" data-filter="assigned">Asignados</button>
+                            </div>
+                            <table class="users-table">
+                                <thead>
+                                    <tr>
+                                        <th>Clave</th>
+                                        <th>Folio</th>
+                                        <th>Marca/Modelo</th>
+                                        <th>Serie</th>
+                                        <th>Ubicación/Responsable</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="external-inventory-table-body">
+                                    <tr>
+                                        <td colspan="8">Cargando equipos foráneos...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Direct Delivery Section -->
+                    <div id="direct-delivery" class="content-section">
+                        <div class="create-user-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="direct-delivery-item">Equipo *</label>
+                                    <select id="direct-delivery-item" required>
+                                        <option value="">Cargando equipos...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="direct-delivery-quantity">Cantidad *</label>
+                                    <input type="number" id="direct-delivery-quantity" min="1" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="direct-delivery-destinatario">Destinatario *</label>
+                                    <input type="text" id="direct-delivery-destinatario" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="direct-delivery-department">Departamento *</label>
+                                    <input type="text" id="direct-delivery-department" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="direct-delivery-observations">Observaciones</label>
+                                <textarea id="direct-delivery-observations" rows="3"></textarea>
+                            </div>
+                            <button type="button" id="submit-direct-delivery" class="btn btn-success"><i
+                                    class="fas fa-shipping-fast"></i> Registrar Entrega Directa</button>
+                        </div>
+                    </div>
+
+                    <!-- Direct Rental Section -->
+                    <div id="direct-rental" class="content-section">
+                        <div class="create-user-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="direct-rental-item">Equipo *</label>
+                                    <select id="direct-rental-item" required>
+                                        <option value="">Cargando equipos...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="direct-rental-quantity">Cantidad *</label>
+                                    <input type="number" id="direct-rental-quantity" min="1" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="direct-rental-destinatario">Responsable / Recibe *</label>
+                                    <input type="text" id="direct-rental-destinatario" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="direct-rental-ubicacion">Ubicación *</label>
+                                    <input type="text" id="direct-rental-ubicacion" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="direct-rental-observations">Observaciones</label>
+                                <textarea id="direct-rental-observations" rows="3"></textarea>
+                            </div>
+                            <button type="button" id="submit-direct-rental" class="btn btn-success"><i
+                                    class="fas fa-key"></i> Registrar Renta Directa</button>
+                        </div>
+                    </div>
+
+                    <!-- Pending Deliveries -->
+                    <div id="pending-deliveries" class="content-section">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Equipo</th>
+                                    <th>Cantidad</th>
+                                    <th>Departamento</th>
+                                    <th>Fecha Solicitud</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pending-deliveries-body">
+                                <tr>
+                                    <td colspan="6">Cargando entregas...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pending Rentals -->
+                    <div id="pending-rentals" class="content-section">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Equipo</th>
+                                    <th>Cantidad</th>
+                                    <th>Ubicación</th>
+                                    <th>Fecha Solicitud</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pending-rentals-body">
+                                <tr>
+                                    <td colspan="6">Cargando rentas pendientes...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Delivery History -->
+                    <div id="delivery-history" class="content-section">
+                        <div class="users-filter">
+                            <button class="btn-filter active" data-filter="all">Todas</button>
+                            <button class="btn-filter" data-filter="approved">Aprobadas</button>
+                            <button class="btn-filter" data-filter="rejected">Rechazadas</button>
+                        </div>
+                        <div id="admin-history-container">
+                            <p>Cargando historial de entregas...</p>
+                        </div>
+                    </div>
+
+                    <!-- Rental Reports -->
+                    <div id="rental-history" class="content-section">
+                        <div class="report-cards">
+                            <div class="report-card">
+                                <h3>Total de Rentas</h3>
+                                <p id="total-rentals">0</p>
+                            </div>
+                            <div class="report-card">
+                                <h3>Equipos Asignados</h3>
+                                <p id="assigned-equipment">0</p>
+                            </div>
+                            <div class="report-card">
+                                <h3>Negocios Atendidos</h3>
+                                <p id="businesses-served">0</p>
+                            </div>
+                        </div>
+                        <div class="chart-container"><canvas id="rental-chart"></canvas></div>
+                        <div class="rental-filters">
+                            <input type="date" id="start-date">
+                            <input type="date" id="end-date">
+                            <button id="generate-report" class="btn btn-primary"><i class="fas fa-file-pdf"></i> Generar
+                                Reporte</button>
+                        </div>
+                        <div id="rental-report-container">
+                            <p>Selecciona un rango de fechas</p>
+                        </div>
+                    </div>
+
+                    <!-- Users List -->
+                    <div id="users-list" class="content-section">
+                        <div class="users-filter">
+                            <button class="btn-filter active" data-filter="all">Todos</button>
+                            <button class="btn-filter" data-filter="alumno">Usuarios</button>
+                            <button class="btn-filter" data-filter="administrativo">Administrador</button>
+                        </div>
+                        <div id="users-table-container">
+                            <table class="users-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>ID</th>
+                                        <th>Nombre Completo</th>
+                                        <th>Carrera/Área</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body">
+                                    <tr>
+                                        <td colspan="5" class="no-data">Cargando usuarios...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Settings -->
+                    <div id="settings" class="content-section">
+                        <div class="settings-card">
+                            <h3>Información de Cuenta</h3>
+                            <p><strong>Usuario:</strong> <span id="admin-username">Super Administrador</span></p>
+                            <p><strong>Correo:</strong> <span id="admin-email">admin@tecnm.mx</span></p>
+                            <p><strong>Último acceso:</strong> <span id="last-login">-</span></p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-address">
+                    © 2026 / Tecnológico Nacional de México Veracruz<br>
+                    Calz. Miguel Angel de Quevedo 2779, CP 91897
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Standard Modal for Alerts -->
+    <div id="custom-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-icon" id="modal-icon">✅</div>
+            <h2 id="modal-title">Éxito</h2>
+            <p id="modal-message">La acción se realizó correctamente.</p>
+            <div class="modal-buttons">
+                <button id="modal-confirm-btn" class="btn btn-success"><i class="fas fa-check"></i> Aceptar</button>
+                <button id="modal-cancel-btn" class="btn btn-danger" style="display:none;"><i class="fas fa-times"></i>
+                    Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+
+</html>
